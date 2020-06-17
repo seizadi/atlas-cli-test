@@ -3,10 +3,11 @@ module github.com/seizadi/atlas-cli-test
 go 1.14
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.4.1 // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
-	github.com/grpc-ecosystem/grpc-gateway v1.14.6
+	github.com/grpc-ecosystem/grpc-gateway v1.9.6
 	github.com/infobloxopen/atlas-app-toolkit v0.21.1
 	github.com/infobloxopen/protoc-gen-atlas-query-validate v0.5.1
 	github.com/infobloxopen/protoc-gen-atlas-validate v0.4.1

@@ -7,7 +7,8 @@ import (
 )
 
 func RegisterGatewayEndpoints() gateway.Option {
-	return gateway.WithEndpointRegistration(viper.GetString("server.version"),
+	return 	gateway.WithEndpointRegistration(viper.GetString("gateway.endpoint"),
+		pb.RegisterAtlasCliTestHandlerFromEndpoint,
 		pb.RegisterAccountsHandlerFromEndpoint,
 		pb.RegisterUsersHandlerFromEndpoint,
 		pb.RegisterGroupsHandlerFromEndpoint,

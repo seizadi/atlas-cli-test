@@ -2,7 +2,7 @@ package main
 
 import (
 	"time"
-
+	
 	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/jinzhu/gorm"
 	"github.com/seizadi/atlas-cli-test/pkg/pb"
@@ -24,6 +24,12 @@ func CreateServer(logger *logrus.Logger, db *gorm.DB, interceptors []grpc.UnaryS
 		), grpc.UnaryInterceptor(grpc_middleware.ChainUnaryServer(interceptors...)))
 
 	// register all of our services into the grpcServer
+	
+	s, err := svc.NewBasicServer(db)
+	if err != nil {
+		return nil, err
+	}
+	pb.RegisterAtlasCliTestServer(grpcServer, s)
 
 	account, err := svc.NewAccountsServer(db)
 	if err != nil {
