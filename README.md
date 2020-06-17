@@ -115,11 +115,65 @@ Now we get version output but other endpoints are not working!
 }
 ```
 
-We can set breakpoint at the version handler and look back at Handler processing to see
-where we have problem.
+This is a problem with endpoint registeration, you need to modify main.go and replace the 
+[following commit](https://github.com/seizadi/atlas-cli-test/commit/ef6b060a42756b990a2f3840f59a6bf9bbf7dd9c)
+and changes to:
+   * grpc.go
+   * main.go
+   * servers.go
+   * endpoints.go
 
-- Get REST endpoints
-- GET Swagger
+After these changes you should be reach the accounts endpoint and others:
+```bash
+curl http://localhost:8080/atlas-cli-test/v1/accounts | jq
+{}
+```
+Now you can add an Account:
+```bash
+curl http://localhost:8080/atlas-cli-test/v1/accounts -d '{"name": "acme", "description": "Acme Corp"}' | jq
+{
+  "result": {
+    "id": "atlas-cli-test/accounts/1",
+    "name": "acme",
+    "description": "Acme Corp"
+  }
+}
+
+curl -X PATCH http://localhost:8080/atlas-cli-test/v1/accounts/1 -d '{"description": "Acme Inc"}' | jq
+{
+  "result": {
+    "id": "atlas-cli-test/accounts/1",
+    "name": "acme",
+    "description": "Acme Inc"
+  }
+}
+
+curl -X PUT http://localhost:8080/atlas-cli-test/v1/accounts/1 -d '{"name": "Acme New"}' | jq
+{
+  "result": {
+    "id": "atlas-cli-test/accounts/1",
+    "name": "Acme New"
+  }
+}
+
+curl http://localhost:8080/atlas-cli-test/v1/accounts | jq
+{
+  "results": [
+    {
+      "id": "atlas-cli-test/accounts/1",
+      "name": "Acme New"
+    }
+  ]
+}
+
+curl -X DELETE http://localhost:8080/atlas-cli-test/v1/accounts/1 | jq
+{}
+```
+To view swagger:
+```bash
+ make run-swagger-ui 
+```
+
 - EXTRA CREDIT setup some relationships
 
 ```bash
