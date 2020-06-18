@@ -701,6 +701,13 @@
         "name": {
           "type": "string",
           "title": "The name of the Group"
+        },
+        "users": {
+          "type": "array",
+          "title": "Users using this Image",
+          "items": {
+            "$ref": "#/definitions/serviceUser"
+          }
         }
       }
     },
@@ -800,6 +807,13 @@
         "description": {
           "type": "string",
           "title": "The description of the User"
+        },
+        "group_list": {
+          "description": "The resource identifier.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "id": {
           "description": "The resource identifier.",

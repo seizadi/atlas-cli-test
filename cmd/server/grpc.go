@@ -16,16 +16,16 @@ func NewGRPCServer(logger *logrus.Logger, dbConnectionString string) (*grpc.Serv
 	interceptors := []grpc.UnaryServerInterceptor{
 		// logging middleware
 		grpc_logrus.UnaryServerInterceptor(logrus.NewEntry(logger)),
-		
+
 		// Request-Id interceptor
 		requestid.UnaryServerInterceptor(),
-		
+
 		// Metrics middleware
 		grpc_prometheus.UnaryServerInterceptor,
-		
+
 		// validation middleware
 		grpc_validator.UnaryServerInterceptor(),
-		
+
 		// collection operators middleware
 		gateway.UnaryServerInterceptor(),
 	}
@@ -35,6 +35,6 @@ func NewGRPCServer(logger *logrus.Logger, dbConnectionString string) (*grpc.Serv
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return CreateServer(logger, db, interceptors)
 }

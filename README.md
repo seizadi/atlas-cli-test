@@ -6,7 +6,15 @@ One paragraph of project description goes here.
 
 ## Getting Started
 
-If you are here you created the app using atlas-cli
+You create a file expand.txt that looks like this:
+```bash
+account
+user
+group
+```
+
+Then you create the app using atlas-cli, substitute *<your registry>* below with the container
+registry you would use with this app.
 ```bash
 atlas init-app -name=test -expand=expand.txt -db=true -registry=<your registry> -gateway -health -helm
 ```
@@ -49,7 +57,7 @@ Successfully tagged soheileizadi/test:e07806a-unsupported
 Lets start running it local, this assumes you have postgres database running on
 localhost listening to 5432, we do this by running a docker postgres image:
 ```bash
-docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=atlas_cli_test -p 5432:5432 postgres
+docker run -d -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=atlas_cli_test -p 5432:5432 postgres
 ```
 
 Make sure it is running
@@ -68,6 +76,11 @@ DATABASE_PASSWORD=postgres
 
 migrate:
     @migrate -database 'postgres://$(DATABASE_USER):$(DATABASE_PASSWORD)@$(DATABASE_HOST)/$(DATABASE_NAME)?sslmode=disable' -path ./db/migration up
+```
+
+You can *psql* to look at the tables that are created:
+```bash
+psql postgres://postgres:postgres@localhost:5432/atlas_cli_test
 ```
 
 Atlas CLI is missing a couple of migration files you can for now copy them from here:
@@ -175,6 +188,14 @@ To view swagger:
 ```
 
 - EXTRA CREDIT setup some relationships
+Add Groups
+```bash
+curl http://localhost:8080/atlas-cli-test/v1/groups -d '{"name": "admins", "description": "Admin Group"}' | jq
+curl http://localhost:8080/atlas-cli-test/v1/groups -d '{"name": "read-only", "description": "Group that can only read"}' | jq
+```
+```bash
+curl http://localhost:8080/atlas-cli-test/v1/users -d '{"name": "Soheil Eizadi", "group_list":["atlas-cli-test/groups/1", "atlas-cli-test/groups/2"]}' | jq
+```
 
 ```bash
 curl http://localhost:8080/atlas-cli-test/v1/version | jq
@@ -182,6 +203,8 @@ export JWT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SUQiOjF9.GsXyFDDARj
 curl -H "Authorization: Bearer $JWT" http://localhost:8080/atlas-cli-test/v1/accounts
 curl -H "Authorization: Bearer $JWT" http://localhost:8080/atlas-cli-test/v1/users
 curl -H "Authorization: Bearer $JWT" http://localhost:8080/atlas-cli-test/v1/groups
+curl -H "Authorization: Bearer $JWT" http://localhost:8080/atlas-cli-test/v1/users -d '{"name": "Soheil Eizadi", "group_list":["atlas-cli-test/groups/1", "atlas-cli-test/groups/2"]}' | jq
+curl -H "Authorization: Bearer $JWT" http://localhost:8080/atlas-cli-test/v1/groups/2 | jq
 ```
 
 ### Prerequisites

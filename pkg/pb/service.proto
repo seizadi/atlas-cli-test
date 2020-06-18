@@ -173,6 +173,17 @@ message User {
   option (gorm.opts) = {
       ormable: true,
       multi_account: false
+      include: [{
+          type: "[]*GroupORM",
+          name: "GroupList",
+          tag: {
+            many_to_many: "users_groups",
+            jointable_foreignkey: "user_id",
+            association_jointable_foreignkey: "group_id",
+            association_autoupdate: false,
+            association_autocreate: false
+          }
+      }]
   };
 
   // The User identifier.
@@ -183,6 +194,9 @@ message User {
 
   // The description of the User
   string description = 3;
+
+  // Groups associated with this User
+  repeated atlas.rpc.Identifier group_list = 4 [(gorm.field).drop = true];
 }
 
 message CreateUserRequest {
@@ -285,7 +299,13 @@ service Users {
 message Group {
   option (gorm.opts) = {
       ormable: true,
-      multi_account: false
+      multi_account: false,
+      include:[
+      {type: "[]*UserORM", name: "Users", tag: {
+        many_to_many: "users_groups",
+        jointable_foreignkey: "group_id",
+        association_jointable_foreignkey: "user_id"}
+      }]
   };
 
   // The Group identifier.
@@ -296,6 +316,10 @@ message Group {
 
   // The description of the Group
   string description = 3;
+
+  // Users using this Image
+  repeated User users = 4 [(gorm.field).many_to_many = {jointable: "users_groups"}];
+
 }
 
 message CreateGroupRequest {
