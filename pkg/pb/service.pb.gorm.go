@@ -154,6 +154,7 @@ type AccountWithAfterToPB interface {
 }
 
 type UserORM struct {
+	AccountId   interface{}
 	Description string
 	GroupList   []*GroupORM `gorm:"many2many:users_groups;jointable_foreignkey:user_id;association_jointable_foreignkey:group_id;association_autoupdate:false;association_autocreate:false"`
 	Groups      []*GroupORM `gorm:"foreignkey:Id;association_foreignkey:Id;many2many:users_groups;jointable_foreignkey:user_id;association_jointable_foreignkey:group_id"`
@@ -194,6 +195,11 @@ func (m *User) ToORM(ctx context.Context) (UserORM, error) {
 			to.Groups = append(to.Groups, nil)
 		}
 	}
+	if v, err := resource1.Decode(nil, m.AccountId); err != nil {
+		return to, err
+	} else if v != nil {
+		to.AccountId = v
+	}
 	if posthook, ok := interface{}(m).(UserWithAfterToORM); ok {
 		err = posthook.AfterToORM(ctx, &to)
 	}
@@ -228,6 +234,11 @@ func (m *UserORM) ToPB(ctx context.Context) (User, error) {
 			to.Groups = append(to.Groups, nil)
 		}
 	}
+	if v, err := resource1.Encode(nil, m.AccountId); err != nil {
+		return to, err
+	} else {
+		to.AccountId = v
+	}
 	if posthook, ok := interface{}(m).(UserWithAfterToPB); ok {
 		err = posthook.AfterToPB(ctx, &to)
 	}
@@ -258,6 +269,7 @@ type UserWithAfterToPB interface {
 }
 
 type GroupORM struct {
+	AccountId   interface{}
 	Description string
 	Id          int64 `gorm:"type:serial;primary_key"`
 	Name        string
@@ -297,6 +309,11 @@ func (m *Group) ToORM(ctx context.Context) (GroupORM, error) {
 			to.Users = append(to.Users, nil)
 		}
 	}
+	if v, err := resource1.Decode(nil, m.AccountId); err != nil {
+		return to, err
+	} else if v != nil {
+		to.AccountId = v
+	}
 	if posthook, ok := interface{}(m).(GroupWithAfterToORM); ok {
 		err = posthook.AfterToORM(ctx, &to)
 	}
@@ -330,6 +347,11 @@ func (m *GroupORM) ToPB(ctx context.Context) (Group, error) {
 		} else {
 			to.Users = append(to.Users, nil)
 		}
+	}
+	if v, err := resource1.Encode(nil, m.AccountId); err != nil {
+		return to, err
+	} else {
+		to.AccountId = v
 	}
 	if posthook, ok := interface{}(m).(GroupWithAfterToPB); ok {
 		err = posthook.AfterToPB(ctx, &to)
@@ -1014,6 +1036,10 @@ func DefaultApplyFieldMaskUser(ctx context.Context, patchee *User, patcher *User
 			patchee.Groups = patcher.Groups
 			continue
 		}
+		if f == prefix+"AccountId" {
+			patchee.AccountId = patcher.AccountId
+			continue
+		}
 	}
 	if err != nil {
 		return nil, err
@@ -1369,6 +1395,10 @@ func DefaultApplyFieldMaskGroup(ctx context.Context, patchee *Group, patcher *Gr
 		}
 		if f == prefix+"Users" {
 			patchee.Users = patcher.Users
+			continue
+		}
+		if f == prefix+"AccountId" {
+			patchee.AccountId = patcher.AccountId
 			continue
 		}
 	}

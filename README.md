@@ -57,7 +57,7 @@ Successfully tagged soheileizadi/test:e07806a-unsupported
 Lets start running it local, this assumes you have postgres database running on
 localhost listening to 5432, we do this by running a docker postgres image:
 ```bash
-docker run -d -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=atlas_cli_test -p 5432:5432 postgres
+docker run -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=atlas_cli_test -p 5432:5432 postgres
 ```
 
 Make sure it is running
@@ -190,11 +190,11 @@ To view swagger:
 - EXTRA CREDIT setup some relationships
 Add Groups
 ```bash
-curl http://localhost:8080/atlas-cli-test/v1/groups -d '{"name": "admins", "description": "Admin Group"}' | jq
-curl http://localhost:8080/atlas-cli-test/v1/groups -d '{"name": "read-only", "description": "Group that can only read"}' | jq
+curl http://localhost:8080/atlas-cli-test/v1/groups -d '{"name": "admins", "description": "Admin Group", "account_id": "atlas-cli-test/accounts/1"}' | jq
+curl http://localhost:8080/atlas-cli-test/v1/groups -d '{"name": "read-only", "description": "Group that can only read", "account_id": "atlas-cli-test/accounts/1"}' | jq
 ```
 ```bash
-curl http://localhost:8080/atlas-cli-test/v1/users -d '{"name": "Soheil Eizadi", "group_list":["atlas-cli-test/groups/1", "atlas-cli-test/groups/2"]}' | jq
+curl http://localhost:8080/atlas-cli-test/v1/users -d '{"name": "Soheil Eizadi", "group_list":["atlas-cli-test/groups/1", "atlas-cli-test/groups/2"], "account_id": "atlas-cli-test/accounts/1"}' | jq
 ```
 
 ```bash

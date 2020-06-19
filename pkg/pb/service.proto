@@ -201,6 +201,8 @@ message User {
   // Groups associated to this User
   repeated Group groups = 5 [(gorm.field).many_to_many = {jointable: "users_groups"}];
 
+  // Reference to Account
+  atlas.rpc.Identifier account_id = 6 [(atlas_validate.field) = {deny: [update] required: [create]}];
 }
 
 message CreateUserRequest {
@@ -324,6 +326,8 @@ message Group {
   // Users using this Image
   repeated User users = 4 [(gorm.field).many_to_many = {jointable: "users_groups"}];
 
+  // Reference to Account
+  atlas.rpc.Identifier account_id = 5 [(atlas_validate.field) = {deny: [update] required: [create]}];
 }
 
 message CreateGroupRequest {
