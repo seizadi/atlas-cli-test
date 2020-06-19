@@ -802,7 +802,6 @@
       }
     },
     "serviceUser": {
-      "type": "object",
       "properties": {
         "description": {
           "type": "string",

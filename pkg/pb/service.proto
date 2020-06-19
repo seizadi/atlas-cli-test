@@ -195,8 +195,12 @@ message User {
   // The description of the User
   string description = 3;
 
-  // Groups associated with this User
+  // Reference List of Groups linked to this User
   repeated atlas.rpc.Identifier group_list = 4 [(gorm.field).drop = true];
+
+  // Groups associated to this User
+  repeated User groups = 5 [(gorm.field).many_to_many = {jointable: "users_groups"}];
+
 }
 
 message CreateUserRequest {

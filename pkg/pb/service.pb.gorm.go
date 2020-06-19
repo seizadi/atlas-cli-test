@@ -156,6 +156,7 @@ type AccountWithAfterToPB interface {
 type UserORM struct {
 	Description string
 	GroupList   []*GroupORM `gorm:"many2many:users_groups;jointable_foreignkey:user_id;association_jointable_foreignkey:group_id;association_autoupdate:false;association_autocreate:false"`
+	Groups      []*UserORM  `gorm:"foreignkey:Id;association_foreignkey:Id;many2many:users_groups;jointable_foreignkey:user_id;association_jointable_foreignkey:group_id"`
 	Id          int64       `gorm:"type:serial;primary_key"`
 	Name        string
 }
@@ -182,6 +183,17 @@ func (m *User) ToORM(ctx context.Context) (UserORM, error) {
 	}
 	to.Name = m.Name
 	to.Description = m.Description
+	for _, v := range m.Groups {
+		if v != nil {
+			if tempGroups, cErr := v.ToORM(ctx); cErr == nil {
+				to.Groups = append(to.Groups, &tempGroups)
+			} else {
+				return to, cErr
+			}
+		} else {
+			to.Groups = append(to.Groups, nil)
+		}
+	}
 	if posthook, ok := interface{}(m).(UserWithAfterToORM); ok {
 		err = posthook.AfterToORM(ctx, &to)
 	}
@@ -205,6 +217,17 @@ func (m *UserORM) ToPB(ctx context.Context) (User, error) {
 	}
 	to.Name = m.Name
 	to.Description = m.Description
+	for _, v := range m.Groups {
+		if v != nil {
+			if tempGroups, cErr := v.ToPB(ctx); cErr == nil {
+				to.Groups = append(to.Groups, &tempGroups)
+			} else {
+				return to, cErr
+			}
+		} else {
+			to.Groups = append(to.Groups, nil)
+		}
+	}
 	if posthook, ok := interface{}(m).(UserWithAfterToPB); ok {
 		err = posthook.AfterToPB(ctx, &to)
 	}
@@ -985,6 +1008,10 @@ func DefaultApplyFieldMaskUser(ctx context.Context, patchee *User, patcher *User
 		}
 		if f == prefix+"GroupList" {
 			patchee.GroupList = patcher.GroupList
+			continue
+		}
+		if f == prefix+"Groups" {
+			patchee.Groups = patcher.Groups
 			continue
 		}
 	}
