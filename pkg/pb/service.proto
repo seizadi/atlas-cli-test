@@ -199,7 +199,7 @@ message User {
   repeated atlas.rpc.Identifier group_list = 4 [(gorm.field).drop = true];
 
   // Groups associated to this User
-  repeated User groups = 5 [(gorm.field).many_to_many = {jointable: "users_groups"}];
+  repeated Group groups = 5 [(gorm.field).many_to_many = {jointable: "users_groups"}];
 
 }
 

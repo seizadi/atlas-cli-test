@@ -198,6 +198,31 @@ curl http://localhost:8080/atlas-cli-test/v1/users -d '{"name": "Soheil Eizadi",
 ```
 
 ```bash
+❯ curl http://localhost:8080/atlas-cli-test/v1/users/1 | jq
+{
+  "result": {
+    "id": "atlas-cli-test/users/7",
+    "name": "Soheil Eizadi",
+    "group_list": [
+      "atlas-cli-test/groups/1",
+      "atlas-cli-test/groups/2"
+    ],
+    "groups": [
+      {
+        "id": "atlas-cli-test/groups/1",
+        "name": "admins",
+        "description": "Admin Group"
+      },
+      {
+        "id": "atlas-cli-test/groups/2",
+        "name": "read-only",
+        "description": "Group that can only read"
+      }
+    ]
+  }
+}
+```
+```bash
 curl http://localhost:8080/atlas-cli-test/v1/version | jq
 export JWT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SUQiOjF9.GsXyFDDARjXe1t9DPo2LIBKHEal3O7t3vLI3edA7dGU"
 curl -H "Authorization: Bearer $JWT" http://localhost:8080/atlas-cli-test/v1/accounts

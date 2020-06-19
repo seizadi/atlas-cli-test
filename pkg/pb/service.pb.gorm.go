@@ -156,7 +156,7 @@ type AccountWithAfterToPB interface {
 type UserORM struct {
 	Description string
 	GroupList   []*GroupORM `gorm:"many2many:users_groups;jointable_foreignkey:user_id;association_jointable_foreignkey:group_id;association_autoupdate:false;association_autocreate:false"`
-	Groups      []*UserORM  `gorm:"foreignkey:Id;association_foreignkey:Id;many2many:users_groups;jointable_foreignkey:user_id;association_jointable_foreignkey:group_id"`
+	Groups      []*GroupORM `gorm:"foreignkey:Id;association_foreignkey:Id;many2many:users_groups;jointable_foreignkey:user_id;association_jointable_foreignkey:group_id"`
 	Id          int64       `gorm:"type:serial;primary_key"`
 	Name        string
 }

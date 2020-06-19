@@ -687,7 +687,6 @@
       }
     },
     "serviceGroup": {
-      "type": "object",
       "properties": {
         "description": {
           "type": "string",
@@ -704,10 +703,26 @@
         },
         "users": {
           "type": "array",
-          "title": "Users using this Image",
           "items": {
-            "$ref": "#/definitions/serviceUser"
+            "$ref": "#/definitions/serviceUser_In_serviceGroup"
           }
+        }
+      }
+    },
+    "serviceGroup_In_serviceUser": {
+      "properties": {
+        "description": {
+          "type": "string",
+          "title": "The description of the Group"
+        },
+        "id": {
+          "description": "The resource identifier.",
+          "type": "string",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "title": "The name of the Group"
         }
       }
     },
@@ -802,6 +817,36 @@
       }
     },
     "serviceUser": {
+      "properties": {
+        "description": {
+          "type": "string",
+          "title": "The description of the User"
+        },
+        "group_list": {
+          "description": "The resource identifier.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/serviceGroup_In_serviceUser"
+          }
+        },
+        "id": {
+          "description": "The resource identifier.",
+          "type": "string",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "title": "The name of the User"
+        }
+      }
+    },
+    "serviceUser_In_serviceGroup": {
       "properties": {
         "description": {
           "type": "string",
