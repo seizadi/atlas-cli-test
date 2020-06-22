@@ -24,6 +24,7 @@ import (
 
 	"github.com/infobloxopen/atlas-app-toolkit/gorm/resource"
 	"github.com/infobloxopen/atlas-app-toolkit/health"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -126,6 +127,9 @@ func ServeExternal(logger *logrus.Logger) error {
 	if err != nil {
 		logger.Fatalln(err)
 	}
+	
+	// Register reflection service on gRPC server.
+	reflection.Register(grpcServer)
 
 	grpcL, err := net.Listen("tcp", fmt.Sprintf("%s:%s", viper.GetString("server.address"), viper.GetString("server.port")))
 	if err != nil {
