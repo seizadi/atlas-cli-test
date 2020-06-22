@@ -154,7 +154,7 @@ type AccountWithAfterToPB interface {
 }
 
 type UserORM struct {
-	AccountId   interface{}
+	AccountId   *int64 `gorm:"type:integer"`
 	Description string
 	GroupList   []*GroupORM `gorm:"many2many:users_groups;jointable_foreignkey:user_id;association_jointable_foreignkey:group_id;association_autoupdate:false;association_autocreate:false"`
 	Groups      []*GroupORM `gorm:"foreignkey:Id;association_foreignkey:Id;many2many:users_groups;jointable_foreignkey:user_id;association_jointable_foreignkey:group_id"`
@@ -195,10 +195,12 @@ func (m *User) ToORM(ctx context.Context) (UserORM, error) {
 			to.Groups = append(to.Groups, nil)
 		}
 	}
-	if v, err := resource1.Decode(nil, m.AccountId); err != nil {
-		return to, err
-	} else if v != nil {
-		to.AccountId = v
+	if m.AccountId != nil {
+		if v, err := resource1.DecodeInt64(&Account{}, m.AccountId); err != nil {
+			return to, err
+		} else {
+			to.AccountId = &v
+		}
 	}
 	if posthook, ok := interface{}(m).(UserWithAfterToORM); ok {
 		err = posthook.AfterToORM(ctx, &to)
@@ -234,10 +236,12 @@ func (m *UserORM) ToPB(ctx context.Context) (User, error) {
 			to.Groups = append(to.Groups, nil)
 		}
 	}
-	if v, err := resource1.Encode(nil, m.AccountId); err != nil {
-		return to, err
-	} else {
-		to.AccountId = v
+	if m.AccountId != nil {
+		if v, err := resource1.Encode(&Account{}, *m.AccountId); err != nil {
+			return to, err
+		} else {
+			to.AccountId = v
+		}
 	}
 	if posthook, ok := interface{}(m).(UserWithAfterToPB); ok {
 		err = posthook.AfterToPB(ctx, &to)
@@ -269,7 +273,7 @@ type UserWithAfterToPB interface {
 }
 
 type GroupORM struct {
-	AccountId   interface{}
+	AccountId   *int64 `gorm:"type:integer"`
 	Description string
 	Id          int64 `gorm:"type:serial;primary_key"`
 	Name        string
@@ -309,10 +313,12 @@ func (m *Group) ToORM(ctx context.Context) (GroupORM, error) {
 			to.Users = append(to.Users, nil)
 		}
 	}
-	if v, err := resource1.Decode(nil, m.AccountId); err != nil {
-		return to, err
-	} else if v != nil {
-		to.AccountId = v
+	if m.AccountId != nil {
+		if v, err := resource1.DecodeInt64(&Account{}, m.AccountId); err != nil {
+			return to, err
+		} else {
+			to.AccountId = &v
+		}
 	}
 	if posthook, ok := interface{}(m).(GroupWithAfterToORM); ok {
 		err = posthook.AfterToORM(ctx, &to)
@@ -348,10 +354,12 @@ func (m *GroupORM) ToPB(ctx context.Context) (Group, error) {
 			to.Users = append(to.Users, nil)
 		}
 	}
-	if v, err := resource1.Encode(nil, m.AccountId); err != nil {
-		return to, err
-	} else {
-		to.AccountId = v
+	if m.AccountId != nil {
+		if v, err := resource1.Encode(&Account{}, *m.AccountId); err != nil {
+			return to, err
+		} else {
+			to.AccountId = v
+		}
 	}
 	if posthook, ok := interface{}(m).(GroupWithAfterToPB); ok {
 		err = posthook.AfterToPB(ctx, &to)
