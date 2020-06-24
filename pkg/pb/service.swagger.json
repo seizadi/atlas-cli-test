@@ -705,6 +705,13 @@
           "type": "string",
           "title": "The name of the Group"
         },
+        "user_list": {
+          "description": "The resource identifier.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "users": {
           "type": "array",
           "items": {
@@ -731,6 +738,13 @@
         "name": {
           "type": "string",
           "title": "The name of the Group"
+        },
+        "user_list": {
+          "description": "The resource identifier.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
