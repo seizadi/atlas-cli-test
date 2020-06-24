@@ -277,6 +277,7 @@ type GroupORM struct {
 	Description string
 	Id          int64 `gorm:"type:serial;primary_key"`
 	Name        string
+	UserList    []*UserORM `gorm:"many2many:users_groups;jointable_foreignkey:group_id;association_jointable_foreignkey:user_id;association_autoupdate:false;association_autocreate:false"`
 	Users       []*UserORM `gorm:"foreignkey:Id;association_foreignkey:Id;many2many:users_groups;jointable_foreignkey:group_id;association_jointable_foreignkey:user_id"`
 }
 
@@ -1399,6 +1400,10 @@ func DefaultApplyFieldMaskGroup(ctx context.Context, patchee *Group, patcher *Gr
 		}
 		if f == prefix+"Description" {
 			patchee.Description = patcher.Description
+			continue
+		}
+		if f == prefix+"UserList" {
+			patchee.UserList = patcher.UserList
 			continue
 		}
 		if f == prefix+"Users" {
