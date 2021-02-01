@@ -55,7 +55,7 @@ github.com/hashicorp/hcl/hcl/token
 github.com/hashicorp/hcl/json/parser
 github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
-# github.com/infobloxopen/atlas-app-toolkit v0.21.1
+# github.com/infobloxopen/atlas-app-toolkit v0.22.1
 ## explicit
 github.com/infobloxopen/atlas-app-toolkit/errors
 github.com/infobloxopen/atlas-app-toolkit/gateway

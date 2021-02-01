@@ -8,7 +8,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0
-	github.com/infobloxopen/atlas-app-toolkit v0.21.1
+	github.com/infobloxopen/atlas-app-toolkit v0.22.1
 	github.com/infobloxopen/protoc-gen-atlas-query-validate v0.5.1
 	github.com/infobloxopen/protoc-gen-atlas-validate v0.4.1
 	github.com/infobloxopen/protoc-gen-gorm v0.20.0

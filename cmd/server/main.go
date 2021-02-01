@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	"google.golang.org/grpc"
 	"log"
 	"net"
 	"net/http"
@@ -118,6 +120,15 @@ func ServeExternal(logger *logrus.Logger) error {
 				runtime.WithForwardResponseOption(forwardResponseOption),
 				runtime.WithIncomingHeaderMatcher(gateway.ExtendedDefaultHeaderMatcher(
 					requestid.DefaultRequestIDKey)),
+			),
+			gateway.WithDialOptions(
+				[]grpc.DialOption{grpc.WithInsecure(), grpc.WithUnaryInterceptor(
+					grpc_middleware.ChainUnaryClient(
+						[]grpc.UnaryClientInterceptor{
+							gateway.ClientUnaryInterceptor,
+							gateway.PresenceClientInterceptor()}...,
+					),
+				)}...,
 			),
 			gateway.WithServerAddress(fmt.Sprintf("%s:%s", viper.GetString("server.address"), viper.GetString("server.port"))),
 			RegisterGatewayEndpoints(),
