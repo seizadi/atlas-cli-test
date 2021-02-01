@@ -70,7 +70,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 Put a rule in make file to run migration locally using migrate tool:
 ```bash
 DATABASE_HOST=localhost:5432
-DATABASE_NAME=test
+DATABASE_NAME=atlas_cli_test
 DATABASE_USER=postgres
 DATABASE_PASSWORD=postgres
 
@@ -81,6 +81,14 @@ migrate:
 You can *psql* to look at the tables that are created:
 ```bash
 psql postgres://postgres:postgres@localhost:5432/atlas_cli_test
+```
+You can standup a kubernetes pod and forward the port for postgres:
+```bash
+kubectl port-forward --namespace test svc/postgresql 5432:5432
+
+PGPASSWORD=postgres dropdb -h 127.0.0.1  -U postgres -p 5432 atlas_cli_test
+PGPASSWORD=postgres createdb -h 127.0.0.1  -U postgres -p 5432 atlas_cli_test
+make migrateup
 ```
 
 Atlas CLI is missing a couple of migration files you can for now copy them from here:
@@ -113,12 +121,16 @@ WARNING: Package "github.com/golang/protobuf/protoc-gen-go/generator" is depreca
 ```
 Now we get version output but other endpoints are not working!
 ```bash
-❯ curl http://localhost:8080/atlas-cli-test/v1/version | jq
+export JWT="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJBY2NvdW50SUQiOjF9.GsXyFDDARjXe1t9DPo2LIBKHEal3O7t3vLI3edA7dGU"
+
+curl http://localhost:8080/atlas-cli-test/v1/version | jq
 {
   "version": "0.0.1"
 }
 
-❯ curl -H "Authorization: Bearer $JWT" http://localhost:8080/atlas-cli-test/v1/accounts | jq
+curl -H "Authorization: Bearer $JWT" http://localhost:8080/atlas-cli-test/v1/users -d '{"name": "user-1"}' | jq
+
+curl -H "Authorization: Bearer $JWT" http://localhost:8080/atlas-cli-test/v1/users | jq
 {
   "error": [
     {
