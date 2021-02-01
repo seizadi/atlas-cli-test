@@ -1962,6 +1962,21 @@ func (m *Group) Validate() error {
 
 	// no validation rules for Description
 
+	for idx, item := range m.GetUserList() {
+		_, _ = idx, item
+
+		if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GroupValidationError{
+					field:  fmt.Sprintf("UserList[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	for idx, item := range m.GetUsers() {
 		_, _ = idx, item
 

@@ -195,7 +195,7 @@ message User {
   // The description of the User
   string description = 3;
 
-  // Reference List of Groups linked to this User
+  // Reference List of Groups that this User is in (just a list of ID)
   repeated atlas.rpc.Identifier group_list = 4 [(gorm.field).drop = true];
 
   // Groups associated to this User
@@ -307,10 +307,16 @@ message Group {
       ormable: true,
       multi_account: false,
       include:[
-      {type: "[]*UserORM", name: "Users", tag: {
-        many_to_many: "users_groups",
-        jointable_foreignkey: "group_id",
-        association_jointable_foreignkey: "user_id"}
+      {
+        type: "[]*UserORM", 
+        name: "UserList", 
+        tag: {
+            many_to_many: "users_groups",
+            jointable_foreignkey: "group_id",
+            association_jointable_foreignkey: "user_id",
+            association_autoupdate: false,
+            association_autocreate: false
+        }
       }]
   };
 
@@ -323,11 +329,14 @@ message Group {
   // The description of the Group
   string description = 3;
 
-  // Users using this Image
-  repeated User users = 4 [(gorm.field).many_to_many = {jointable: "users_groups"}];
+  // Reference List of Users in this Group (just a list of ID)
+  repeated atlas.rpc.Identifier user_list = 4 [(gorm.field).drop = true];
+
+  // Users in this Group
+  repeated User users = 5 [(gorm.field).many_to_many = {jointable: "users_groups"}];
 
   // Reference to Account
-  atlas.rpc.Identifier account_id = 5 [(gorm.field) = {reference_of: "Account", tag: {type: "integer"}}, (atlas_validate.field) = {deny: [update] required: [create]}];
+  atlas.rpc.Identifier account_id = 6 [(gorm.field) = {reference_of: "Account", tag: {type: "integer"}}, (atlas_validate.field) = {deny: [update] required: [create]}];
 }
 
 message CreateGroupRequest {
