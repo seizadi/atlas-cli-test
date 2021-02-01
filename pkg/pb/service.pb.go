@@ -568,7 +568,7 @@ type User struct {
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// The description of the User
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// Reference List of Groups linked to this User
+	// Reference List of Groups that this User is in (just a list of ID)
 	GroupList []*resource.Identifier `protobuf:"bytes,4,rep,name=group_list,json=groupList,proto3" json:"group_list,omitempty"`
 	// Groups associated to this User
 	Groups []*Group `protobuf:"bytes,5,rep,name=groups,proto3" json:"groups,omitempty"`
@@ -1083,9 +1083,9 @@ type Group struct {
 	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	// The description of the Group
 	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	// Reference List of Users linked to this Group
+	// Reference List of Users in this Group (just a list of ID)
 	UserList []*resource.Identifier `protobuf:"bytes,4,rep,name=user_list,json=userList,proto3" json:"user_list,omitempty"`
-	// Users using this Image
+	// Users in this Group
 	Users []*User `protobuf:"bytes,5,rep,name=users,proto3" json:"users,omitempty"`
 	// Reference to Account
 	AccountId            *resource.Identifier `protobuf:"bytes,6,opt,name=account_id,json=accountId,proto3" json:"account_id,omitempty"`
